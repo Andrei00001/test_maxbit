@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  bot:
+    build: .
+    environment:
+      DATABASE_URL: "postgresql://admin:admin@db:5432/test_bot"
+    env_file: ".env"
+    depends_on:
+      - db
+    networks:
+      app_network:
+        ipv4_address: 192.168.1.100
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "test_bot"
+    ports:
+      - "5433:5433"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
